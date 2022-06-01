@@ -34,12 +34,6 @@ then
         # bind mount pulse socket
         mount --bind /mnt/pulse /run/user/$USER_UID/pulse
 
-        # symlink wayland display
-        ln -s /mnt/display /run/display
-
-        # replace Xorg with Xwayland in xserverrc
-        cp /mnt/guest/configs/xserverrc /etc/X11/xinit/xserverrc
-
         sleep 1
 fi
 
@@ -49,7 +43,7 @@ unset BROWSER
 
 # set env
 export XDG_RUNTIME_DIR=/run/user/$USER_UID
-export WAYLAND_DISPLAY="../../display/wayland-container-$1" # connect to qxcompositor wayland socket
+export WAYLAND_DISPLAY="/mnt/display/wayland-0" # connect to qxcompositor wayland socket
 
 export LANG=C
 export EGL_PLATFORM=wayland
@@ -69,10 +63,12 @@ su $USER_NAME -c startx
 #
 ## Xwayland -> Xephyr/Xnest -> lightdm testing
 # set display to xwayland and start Xephyr on :1
-#export DISPLAY=:0
+export DISPLAY=:0
 #Xephyr -fullscreen -nolisten tcp -ac -2button -host-cursor :1 &
 #sleep 3
 
+# startlxde
+#work in progess
 # set display to Xephyr and start display manager
 #export DISPLAY=:1 (not required)
 #/bin/systemctl restart lightdm
